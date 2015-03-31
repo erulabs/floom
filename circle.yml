@@ -1,0 +1,11 @@
+dependencies:
+  override:
+    - npm install
+    - npm install -g istanbul
+
+
+test:
+  override:
+    - npm test
+    - rm -rf .ops
+    - npm run coverage

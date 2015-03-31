@@ -1,0 +1,43 @@
+{
+  "name": "opsjs",
+  "version": "0.0.1",
+  "description": "The streaming infrastructure build system",
+  "main": "lib/ops.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "coverage": "env NODE_ENV=test istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:erulabs/opsjs.git"
+  },
+  "keywords": [
+    "streaming",
+    "infrastructure",
+    "devops",
+    "automation"
+  ],
+  "author": "Seandon 'erulabs' Mooy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erulabs/opsjs/issues"
+  },
+  "homepage": "https://github.com/erulabs/opsjs",
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "gulp": "^3.8.11",
+    "gulp-exec": "^2.1.1",
+    "gulp-jshint": "^1.9.4",
+    "gulp-watch": "^4.2.1",
+    "istanbul": "^0.3.13",
+    "jshint-stylish": "^1.0.1",
+    "mocha": "^2.2.1",
+    "run-sequence": "^1.0.2",
+    "should": "^5.2.0"
+  },
+  "dependencies": {
+    "orchestrator": "^0.3.7",
+    "simple-ssh": "^0.8.3",
+    "winston": "^0.9.0"
+  }
+}
