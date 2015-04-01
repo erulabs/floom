@@ -1,7 +1,7 @@
-# Opsjs
+# Opsjs [![Circle CI](https://circleci.com/gh/erulabs/opsjs/tree/master.png)](https://circleci.com/gh/erulabs/opsjs/tree/master)
 **The streaming infrastructure build system**
 
-[![Circle CI](https://circleci.com/gh/erulabs/opsjs/tree/master.png?style=shield)](https://circleci.com/gh/erulabs/opsjs/tree/master) [![Coverage Status](https://coveralls.io/repos/erulabs/opsjs/badge.svg?branch=master)](https://coveralls.io/r/erulabs/opsjs?branch=master) [![Code Climate](https://codeclimate.com/github/erulabs/opsjs/badges/gpa.svg)](https://codeclimate.com/github/erulabs/opsjs) [![Dependency Status](https://gemnasium.com/erulabs/opsjs.svg)](https://gemnasium.com/erulabs/opsjs)
+[![Coverage Status](https://coveralls.io/repos/erulabs/opsjs/badge.svg?branch=master)](https://coveralls.io/r/erulabs/opsjs?branch=master) [![Code Climate](https://codeclimate.com/github/erulabs/opsjs/badges/gpa.svg)](https://codeclimate.com/github/erulabs/opsjs) [![Dependency Status](https://gemnasium.com/erulabs/opsjs.svg)](https://gemnasium.com/erulabs/opsjs)
 
 ```javascript
 var ops = require('opsjs'),
