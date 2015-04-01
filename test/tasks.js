@@ -41,7 +41,13 @@ describe('ops', function () {
       fs.writeFileSync(common.OPS_DIR + '/app-2.json', JSON.stringify({
         name: 'app-2'
       }, null, 2));
-      var nodes = ['app-1', 'app-2'];
+      // Preseed another with currupted json
+      fs.writeFileSync(common.OPS_DIR + '/app-3.json', '2sdknf34', null, 2);
+      // Preseed another with the wrong name
+      fs.writeFileSync(common.OPS_DIR + '/app-4.json', JSON.stringify({
+        name: 'Something_that_doesnt_exist'
+      }, null, 2));
+      var nodes = ['app-1', 'app-2', 'app-3', 'app-4'];
       var i = 1;
       function beDone () {
         i += 1;
@@ -65,7 +71,8 @@ describe('ops', function () {
     it('should save nodes to the .ops directory', function (done) {
       var nodes = ['app-3', {
         name: 'app-4',
-        via: 'Something_that_doesnt_exist'
+        via: 'Something_that_doesnt_exist',
+        loader: 'Something_that_doesnt_exist'
       }];
       var i = 1;
       function beDone () {
@@ -145,8 +152,18 @@ describe('Node', function () {
       var inst = new Node('erulabs.com');
       inst.connect(function () {
         done();
-        inst.disconnect().should.be.an.instanceof(Node);
+        inst.disconnect(function () {}).should.be.an.instanceof(Node);
       }).should.be.an.instanceof(Node);
+    });
+    it('should reject bad vias', function (done) {
+      var inst = new Node({
+        name: 'erulabs.com',
+        via: 'Something_that_doesnt_exist'
+      });
+      inst.connect(function (connected) {
+        connected.should.equal(false);
+        done();
+      });
     });
   });
 });
