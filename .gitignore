@@ -1,6 +1,12 @@
-node_modules
 .DS_Store
+.AppleDouble
+.LSOverride
+node_modules
 .ops
-/tmp
+tmp
 .coveralls.yml
-/coverage
+coverage
+Thumbs.db
+ehthumbs.db
+.directory
+.Trash-*

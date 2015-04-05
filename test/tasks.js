@@ -10,6 +10,8 @@ var Opsjs = require('../lib/ops.js'),
   Stream = require('stream'),
   events = require('events');
 
+ops.log.level = 0;
+
 describe('ops', function () {
   describe('init', function () {
     it('should create OPS_DIR', function () {
@@ -29,11 +31,6 @@ describe('ops', function () {
   describe('.nodes()', function () {
     it('should return a readable Stream', function (done) {
       ops.nodes('app-0').should.be.an.instanceof(Stream.Readable);
-      done();
-    });
-    it('should reject poorly named nodes', function (done) {
-      ops.nodes().should.equal(false);
-      ops.nodes(5234).should.equal(false);
       done();
     });
     it('should define nodes', function (done) {
@@ -57,7 +54,7 @@ describe('ops', function () {
       }
       ops.nodes(nodes)
         .pipe(ops.simple(function (node, callback) {
-          ops.nodes[node].data.name.should.equal(node);
+          ops._nodes[node].data.name.should.equal(node);
 
           beDone();
           callback();
@@ -85,19 +82,16 @@ describe('ops', function () {
         .pipe(ops.save())
         .pipe(ops.simple(function (node, callback) {
           fs.existsSync(common.OPS_DIR + node + '.json').should.equal(true);
-          ops.nodes[node].data.name.should.equal(node);
+          ops._nodes[node].data.name.should.equal(node);
           beDone();
           callback();
-        }));
+        }))
+        .pipe(ops.disconnect());
     });
   });
   describe('.exec()', function () {
     it('should return a readable Stream', function () {
       ops.exec('ls -al').should.be.an.instanceof(Stream.Readable);
-    });
-    it('should reject unknown input', function () {
-      ops.exec(true).should.equal(false);
-      ops.exec(23424).should.equal(false);
     });
     it('should run shell commands on foreign hosts', function (done) {
       var nodes = ['app-5', 'app-6'];
@@ -111,10 +105,11 @@ describe('ops', function () {
       ops.nodes(nodes)
         .pipe(ops.exec('ls -al'))
         .pipe(ops.simple(function (node, callback) {
-          ops.nodes[node].data.name.should.equal(node);
+          ops._nodes[node].data.name.should.equal(node);
           beDone();
           callback();
-        }));
+        }))
+        .pipe(ops.end());
     });
   });
 });
@@ -122,16 +117,17 @@ describe('ops', function () {
 describe('Node', function () {
   describe('new Node()', function () {
     it('should return an EventEmitter', function () {
-      var inst = new Node('some_name');
+      var inst = new Node('some_name', ops);
       inst.should.be.an.instanceof(events.EventEmitter);
     });
     it('should reject poorly named nodes', function () {
-      Node(true).should.equal(false);
+      var inst = new Node(true, ops);
+      (typeof inst.error).should.equal('string');
     });
   });
   describe('.save()', function () {
     it('should fire the saved event', function (done) {
-      var inst = new Node('some_name');
+      var inst = new Node('some_name', ops);
       inst.on('saved', function () {
         done();
       });
@@ -140,7 +136,7 @@ describe('Node', function () {
   });
   describe('.load()', function () {
     it('should fire the loaded event', function (done) {
-      var inst = new Node('some_name');
+      var inst = new Node('some_name', ops);
       inst.on('loaded', function () {
         done();
       });
@@ -149,7 +145,7 @@ describe('Node', function () {
   });
   describe('.connect()', function () {
     it('should fire the loaded event', function (done) {
-      var inst = new Node('erulabs.com');
+      var inst = new Node('erulabs.com', ops);
       inst.connect(function () {
         done();
         inst.disconnect(function () {}).should.be.an.instanceof(Node);
@@ -159,7 +155,7 @@ describe('Node', function () {
       var inst = new Node({
         name: 'erulabs.com',
         via: 'Something_that_doesnt_exist'
-      });
+      }, ops);
       inst.connect(function (connected) {
         connected.should.equal(false);
         done();
