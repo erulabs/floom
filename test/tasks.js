@@ -10,7 +10,9 @@ var Opsjs = require('../lib/ops.js'),
   Stream = require('stream'),
   events = require('events');
 
-ops.log.level = 0;
+if (process.env.NODE_ENV === 'test') {
+  ops.log.level = 0;
+}
 
 describe('ops', function () {
   describe('init', function () {
@@ -29,8 +31,8 @@ describe('ops', function () {
     });
   });
   describe('.nodes()', function () {
-    it('should return a readable Stream', function (done) {
-      ops.nodes('app-0').should.be.an.instanceof(Stream.Readable);
+    it('should return a highland Stream', function (done) {
+      ops.nodes('app-0').__HighlandStream__.should.equal(true);
       done();
     });
     it('should define nodes', function (done) {
@@ -54,8 +56,7 @@ describe('ops', function () {
       }
       ops.nodes(nodes)
         .pipe(ops.simple(function (node, callback) {
-          ops._nodes[node].data.name.should.equal(node);
-
+          node.should.be.an.instanceof(Node);
           beDone();
           callback();
         }));
@@ -63,7 +64,7 @@ describe('ops', function () {
   });
   describe('.save()', function () {
     it('should return a readable Stream', function () {
-      ops.save().should.be.an.instanceof(Stream.Readable);
+      ops.save().should.be.an.instanceof(Stream.Transform);
     });
     it('should save nodes to the .ops directory', function (done) {
       var nodes = ['app-3', {
@@ -81,8 +82,8 @@ describe('ops', function () {
       ops.nodes(nodes)
         .pipe(ops.save())
         .pipe(ops.simple(function (node, callback) {
-          fs.existsSync(common.OPS_DIR + node + '.json').should.equal(true);
-          ops._nodes[node].data.name.should.equal(node);
+          fs.existsSync(common.OPS_DIR + node.data.name + '.json').should.equal(true);
+          node.should.be.an.instanceof(Node);
           beDone();
           callback();
         }))
@@ -105,7 +106,7 @@ describe('ops', function () {
       ops.nodes(nodes)
         .pipe(ops.exec('ls -al'))
         .pipe(ops.simple(function (node, callback) {
-          ops._nodes[node].data.name.should.equal(node);
+          node.should.be.an.instanceof(Node);
           beDone();
           callback();
         }))

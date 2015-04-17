@@ -1,6 +1,23 @@
 'use strict';
 
 var ops = require('./../index.js');
+
+// var nodes = [
+//   {
+//     name: 'erulabs.com',
+//     ssh: {
+//       username: 'seandon'
+//     }
+//   }
+// ];
+//
+// ops.log.level = 'debug';
+//
+// ops.nodes(nodes)
+//   .pipe(ops.save())
+//   .pipe(ops.exec('ls -al'))
+//   .pipe(ops.end());
+
 var nodes = [
   {
     name: 'erulabs.com',
@@ -9,9 +26,8 @@ var nodes = [
     }
   }
 ];
-
-ops.log.level = 'debug';
-
 ops.nodes(nodes)
-  .pipe(ops.exec('ls -al'))
-  .pipe(ops.end());
+  .pipe(ops.simple(function (node, callback) {
+    callback();
+  }))
+  .pipe(ops.disconnect());
