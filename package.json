@@ -38,9 +38,10 @@
     "should": "^6.0.1"
   },
   "dependencies": {
-    "orchestrator": "^0.3.7",
     "highland": "^2.4.0",
+    "orchestrator": "^0.3.7",
     "ssh2": "^0.4.6",
+    "ssh2shell": "^1.4.1",
     "winston": "^1.0.0"
   }
 }
