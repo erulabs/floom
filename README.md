@@ -1,4 +1,4 @@
-# Opsjs [![Circle CI](https://circleci.com/gh/erulabs/opsjs/tree/master.png)](https://circleci.com/gh/erulabs/opsjs/tree/master)
+# Opsjs [![Circle CI](https://circleci.com/gh/erulabs/opsjs/tree/master.png)](https://circleci.com/gh/erulabs/opsjs/tree/master) [![Stories in Ready](https://badge.waffle.io/erulabs/opsjs.png?label=ready&title=Ready)](https://waffle.io/erulabs/opsjs)
 **The streaming infrastructure build system**
 
 [![Coverage Status](https://coveralls.io/repos/erulabs/opsjs/badge.svg?branch=master)](https://coveralls.io/r/erulabs/opsjs?branch=master) [![Code Climate](https://codeclimate.com/github/erulabs/opsjs/badges/gpa.svg)](https://codeclimate.com/github/erulabs/opsjs) [![Dependency Status](https://gemnasium.com/erulabs/opsjs.svg)](https://gemnasium.com/erulabs/opsjs)
