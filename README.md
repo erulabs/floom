@@ -5,7 +5,7 @@
 
 ```javascript
 var ops = require('opsjs'),
-  rackspace = require('ops-rackspace'),
+  aws = require('ops-aws'),
   myServers = ['app-1', 'app-2'];
 
 // Define a task
@@ -13,9 +13,9 @@ ops.task('provision_rs', function () {
   // .node similar to gulp's .src
   ops.node(myServers)
     // Use a plugin to stream server builds against cloud providers
-    .pipe(rackspace.servers({
-      region: 'IAD',
-      flavor: 'general1-1'
+    .pipe(aws.servers({
+      ImageId: 'ami-1624987f', // Amazon Linux AMI x86_64 EBS
+      InstanceType: 't1.micro',
     }))
     // Ops provides a simple package mangement wrapper
     .pipe(ops.package('nginx'))
