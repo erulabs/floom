@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/erulabs/opsjs.png?label=ready&title=Ready)](https://waffle.io/erulabs/opsjs)
 # Opsjs [![Circle CI](https://circleci.com/gh/erulabs/opsjs/tree/master.png)](https://circleci.com/gh/erulabs/opsjs/tree/master)
 **The streaming infrastructure build system**
 
