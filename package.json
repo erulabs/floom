@@ -7,7 +7,8 @@
     "test": "env NODE_ENV=test node node_modules/mocha/bin/_mocha --reporter spec",
     "debug": "env NODE_ENV=debug node node_modules/mocha/bin/_mocha --reporter spec",
     "coverage": "env NODE_ENV=test istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "todos": "grep -n '@todo' lib/*.js || : && grep -n '@todo' bin/*.js || :"
+    "todos": "grep -n '@todo' lib/*.js || : && grep -n '@todo' bin/*.js || :",
+    "dev": "node node_modules/gulp/bin/gulp watch"
   },
   "repository": {
     "type": "git",

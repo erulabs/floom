@@ -12,11 +12,6 @@ var ops = require('opsjs'),
 ops.task('provision_rs', function () {
   // .node similar to gulp's .src
   ops.node(myServers)
-    // Use a plugin to stream server builds against cloud providers
-    .pipe(aws.servers({
-      ImageId: 'ami-1624987f', // Amazon Linux AMI x86_64 EBS
-      InstanceType: 't1.micro',
-    }))
     // Ops provides a simple package mangement wrapper
     .pipe(ops.package('nginx'))
     // But you can also simply run shell commands...
@@ -27,10 +22,16 @@ ops.task('provision_rs', function () {
     }));
 });
 
+// COMING SOON:
 // An example of deploying an application to our newly built nodes!
 ops.task('deploy_app', function () {
   // Select the name servers
   ops.nodes(myServers)
+    // Use a plugin to stream server builds against cloud providers
+    .pipe(aws.servers({
+      ImageId: 'ami-1624987f', // Amazon Linux AMI x86_64 EBS
+      InstanceType: 't1.micro',
+    }))
     // ops.deploy will throw an error if it has no way of connecting
     // Obviously that can be because the connection is faulty, but also if the node hasnt been provisioned yet.
     .pipe(ops.deploy({
@@ -42,3 +43,11 @@ ops.task('deploy_app', function () {
 
 ops.task('bootstrap', 'provision_rs', 'deploy_app');
 ```
+
+## Development:
+
+  `npm install && npm run dev`
+
+Ops is written in plain ES5 (assuming Node >0.8) for maximum compatibility.
+
+Style guide: https://github.com/airbnb/javascript

@@ -125,7 +125,7 @@ describe('Node', function () {
     });
     it('should reject poorly named nodes', function () {
       var inst = new Node(true, ops);
-      (typeof inst.error).should.equal('string');
+      inst.error.should.be.an.instanceof(String);
     });
   });
   describe('.save()', function () {
@@ -159,8 +159,8 @@ describe('Node', function () {
         name: 'erulabs.com',
         via: 'Something_that_doesnt_exist'
       }, ops);
-      inst.connect(function (connected) {
-        connected.should.equal(false);
+      inst.connect(function (error) {
+        error.should.be.an.instanceof(String);
         done();
       });
     });
@@ -170,7 +170,7 @@ describe('Node', function () {
 describe('common', function () {
   describe('OPS_DIR', function () {
     it('should be defined', function (done) {
-      (typeof common.OPS_DIR).should.equal('string');
+      common.OPS_DIR.should.be.an.instanceof(String);
       done();
     });
   });
