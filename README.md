@@ -10,19 +10,27 @@ var ops = require('opsjs'),
 
 // Define a task
 ops.task('provision_rs', function () {
-  // .node similar to gulp's .src
-  ops.node(myServers)
-    // Ops provides a simple package mangement wrapper
-    .pipe(ops.package('nginx'))
-    // But you can also simply run shell commands...
-    .pipe(ops.exec('ls -al'))
-    // Even better, you can run native Javascript!
-    .pipe(ops.exec(function () {
-      console.log('I\'ll get run on both app-1 and app-2!');
-    }));
+  // .nodes similar to gulp's .src
+  ops.nodes(myServers)
+    // Open an SSH connection to each host
+    .pipe(ops.connect())
+    // Run a shell command!
+    .pipe(ops.exec('ls -al')
+      // See output per host...
+      .on('nodeComplete', function (node, output) {
+        console.log(node.data.name, 'says', output);
+      }))
+    // Install a package!
+    .pipe(ops.package('nginx')
+      // Run a function when all hosts are complete with this step
+      .on('complete', function () {
+        console.log('All nodes have nginx installed');
+      }))
+    // Disconnect nodes when all tasks are done :)
+    .pipe(ops.disconnect());
 });
 
-// COMING SOON:
+// COMING SOON - none of this stuff exists yet:
 // An example of deploying an application to our newly built nodes!
 ops.task('deploy_app', function () {
   // Select the name servers
@@ -37,7 +45,17 @@ ops.task('deploy_app', function () {
     .pipe(ops.deploy({
       path: '/var/www/app',
       git: 'git@github.com:erulabs/node_test',
-      branch: 'master'
+      branch: 'master',
+      user: 'app'
+    }))
+    // Run arbitrary javascript because MAGIC
+    .pipe(ops.exec(function () {
+      console.log('you wont see this output, but it will be sent to stdout on the remote host');
+    }));
+    // Deploy your current local commit, restart the app, etc. An all in one "deploy my node.js app:"
+    .pipe(ops.hoist({
+      path: '/var/www/app2',
+      user: 'app2'
     }));
 });
 

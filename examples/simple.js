@@ -12,15 +12,18 @@ var nodes = [
 ];
 
 ops.log.level = 'debug';
-ops.persistent = false;
 
 ops.nodes(nodes)
-  .pipe(ops.start())
+  .pipe(ops.connect())
   .pipe(ops.exec('ls -al')
     .on('nodeComplete', function (node, output) {
       console.log(node.data.name, 'says', output);
     }))
-  .pipe(ops.end());
+  .pipe(ops.package('nginx')
+    .on('complete', function () {
+      console.log('All nodes have nginx installed');
+    }))
+  .pipe(ops.disconnect());
 
 //console.log(ops.package('text').on);
 
