@@ -1,6 +1,6 @@
 'use strict';
 
-var Opsjs = require('./lib/ops.js');
-var ops = new Opsjs();
+var Floom = require('./lib/floom.js');
+var floom = new Floom();
 
-module.exports = ops;
+module.exports = floom;

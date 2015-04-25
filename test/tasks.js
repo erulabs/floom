@@ -1,17 +1,17 @@
 'use strict';
 
 require('mocha');
-var Opsjs = require('../lib/ops.js'),
+var Floom = require('../lib/floom.js'),
   common = require('../lib/common.js'),
   Node = require('../lib/node.js'),
-  ops = new Opsjs(),
+  floom = new Floom(),
   should = require('should'),
   fs = require('fs'),
   Stream = require('stream'),
   events = require('events');
 
 if (process.env.NODE_ENV === 'test') {
-  ops.log.level = 0;
+  floom.log.level = 0;
 }
 
 describe('ops', function () {
@@ -23,16 +23,16 @@ describe('ops', function () {
   describe('.task()', function () {
     it('should define a task', function (done) {
       var fn = function () {};
-      ops.task('test', fn);
-      should.exist(ops.tasks.test);
-      ops.tasks.test.fn.should.equal(fn);
-      ops.reset();
+      floom.task('test', fn);
+      should.exist(floom.tasks.test);
+      floom.tasks.test.fn.should.equal(fn);
+      floom.reset();
       done();
     });
   });
   describe('.nodes()', function () {
     it('should return a highland Stream', function (done) {
-      ops.nodes('app-0').__HighlandStream__.should.equal(true);
+      floom.nodes('app-0').__HighlandStream__.should.equal(true);
       done();
     });
     it('should define nodes', function (done) {
@@ -54,8 +54,8 @@ describe('ops', function () {
           done();
         }
       }
-      ops.nodes(nodes)
-        .pipe(ops.simple(function (node, callback) {
+      floom.nodes(nodes)
+        .pipe(floom.simple(function (node, callback) {
           node.should.be.an.instanceof(Node);
           beDone();
           callback();
@@ -64,7 +64,7 @@ describe('ops', function () {
   });
   describe('.save()', function () {
     it('should return a readable Stream', function () {
-      ops.save().should.be.an.instanceof(Stream.Transform);
+      floom.save().should.be.an.instanceof(Stream.Transform);
     });
     it('should save nodes to the .ops directory', function (done) {
       var nodes = ['app-3', {
@@ -79,20 +79,20 @@ describe('ops', function () {
           done();
         }
       }
-      ops.nodes(nodes)
-        .pipe(ops.save())
-        .pipe(ops.simple(function (node, callback) {
+      floom.nodes(nodes)
+        .pipe(floom.save())
+        .pipe(floom.simple(function (node, callback) {
           fs.existsSync(common.OPS_DIR + node.data.name + '.json').should.equal(true);
           node.should.be.an.instanceof(Node);
           beDone();
           callback();
         }))
-        .pipe(ops.disconnect());
+        .pipe(floom.disconnect());
     });
   });
   describe('.exec()', function () {
     it('should return a readable Stream', function () {
-      ops.exec('ls -al').should.be.an.instanceof(Stream.Readable);
+      floom.exec('ls -al').should.be.an.instanceof(Stream.Readable);
     });
     it('should run shell commands on foreign hosts', function (done) {
       var nodes = ['app-5', 'app-6'];
@@ -103,16 +103,16 @@ describe('ops', function () {
           done();
         }
       }
-      ops.nodes(nodes)
+      floom.nodes(nodes)
         // TODO: Turn this test back on.
         // Need to mock a real SSH service to test this properly
-        //.pipe(ops.exec('ls -al'))
-        .pipe(ops.simple(function (node, callback) {
+        //.pipe(floom.exec('ls -al'))
+        .pipe(floom.simple(function (node, callback) {
           node.should.be.an.instanceof(Node);
           beDone();
           callback();
         }))
-        .pipe(ops.end());
+        .pipe(floom.end());
     });
   });
 });
@@ -120,17 +120,17 @@ describe('ops', function () {
 describe('Node', function () {
   describe('new Node()', function () {
     it('should return an EventEmitter', function () {
-      var inst = new Node('some_name', ops);
+      var inst = new Node('some_name', floom);
       inst.should.be.an.instanceof(events.EventEmitter);
     });
     it('should reject poorly named nodes', function () {
-      var inst = new Node(true, ops);
+      var inst = new Node(true, floom);
       inst.error.should.be.an.instanceof(String);
     });
   });
   describe('.save()', function () {
     it('should fire the saved event', function (done) {
-      var inst = new Node('some_name', ops);
+      var inst = new Node('some_name', floom);
       inst.on('saved', function () {
         done();
       });
@@ -139,7 +139,7 @@ describe('Node', function () {
   });
   describe('.load()', function () {
     it('should fire the loaded event', function (done) {
-      var inst = new Node('some_name', ops);
+      var inst = new Node('some_name', floom);
       inst.on('loaded', function () {
         done();
       });
@@ -148,7 +148,7 @@ describe('Node', function () {
   });
   describe('.connect()', function () {
     it('should fire the loaded event', function (done) {
-      var inst = new Node('erulabs.com', ops);
+      var inst = new Node('erulabs.com', floom);
       inst.connect(function () {
         done();
         inst.disconnect(function () {}).should.be.an.instanceof(Node);
@@ -158,7 +158,7 @@ describe('Node', function () {
       var inst = new Node({
         name: 'erulabs.com',
         via: 'Something_that_doesnt_exist'
-      }, ops);
+      }, floom);
       inst.connect(function (error) {
         error.should.be.an.instanceof(String);
         done();

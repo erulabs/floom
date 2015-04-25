@@ -1,6 +1,6 @@
 'use strict';
 
-var ops = require('./../index.js');
+var floom = require('./../index.js');
 
 var nodes = [
   {
@@ -11,27 +11,27 @@ var nodes = [
   }
 ];
 
-ops.log.level = 'debug';
+floom.log.level = 'debug';
 
-ops.nodes(nodes)
-  .pipe(ops.connect())
-  .pipe(ops.exec('ls -al')
+floom.nodes(nodes)
+  .pipe(floom.connect())
+  .pipe(floom.exec('ls -al')
     .on('nodeComplete', function (node, output) {
       console.log(node.data.name, 'says', output);
     }))
-  .pipe(ops.package('nginx')
+  .pipe(floom.package('nginx')
     .on('complete', function () {
       console.log('All nodes have nginx installed');
     }))
-  .pipe(ops.disconnect());
+  .pipe(floom.disconnect());
 
-//console.log(ops.package('text').on);
+//console.log(floom.package('text').on);
 
-//ops.nodes(nodes)
-//  .pipe(ops.save())
-//  .pipe(ops.package('nginx')
+//floom.nodes(nodes)
+//  .pipe(floom.save())
+//  .pipe(floom.package('nginx')
 //    .on('nodeComplete', function (node, output) {
 //      console.log(node.data.name, 'says', output);
 //    }))
-//  .pipe(ops.disconnect());
+//  .pipe(floom.disconnect());
 //
