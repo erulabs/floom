@@ -42,7 +42,7 @@ cli.on('respawn', function(flags, child) {
 
 cli.launch({
   cwd: argv.cwd,
-  configPath: argv.gulpfile,
+  configPath: argv.floomfile,
   require: argv.require,
   completion: argv.completion,
 }, function handleArguments(env) {
@@ -70,24 +70,24 @@ cli.launch({
 
   // Check for semver difference between cli and local installation
   if (semver.gt(cliPackage.version, env.modulePackage.version)) {
-    log.info(chalk.red('Warning: gulp version mismatch:'));
-    log.info(chalk.red('Global gulp is', cliPackage.version));
-    log.info(chalk.red('Local gulp is', env.modulePackage.version));
+    log.info(chalk.red('Warning: floom version mismatch:'));
+    log.info(chalk.red('Global floom is', cliPackage.version));
+    log.info(chalk.red('Local floom is', env.modulePackage.version));
   }
 
   // Chdir before requiring floomfile to make sure
   // we let them chdir as needed
   if (process.cwd() !== env.cwd) {
     process.chdir(env.cwd);
-    log.info(
+    log.debug(
       'Working directory changed to',
       chalk.magenta(tildify(env.cwd))
     );
   }
 
-  // This is what actually loads up the gulpfile
+  // This is what actually loads up the floomfile
   require(env.configPath);
-  log.info('Using gulpfile', chalk.magenta(tildify(env.configPath)));
+  log.debug('Using floomfile', chalk.magenta(tildify(env.configPath)));
 
   var floomInst = require(env.modulePath);
 
