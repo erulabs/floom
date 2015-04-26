@@ -3,9 +3,13 @@
 
 [![Coverage Status](https://coveralls.io/repos/erulabs/floom/badge.svg?branch=master)](https://coveralls.io/r/erulabs/floom?branch=master) [![Code Climate](https://codeclimate.com/github/erulabs/floom/badges/gpa.svg)](https://codeclimate.com/github/erulabs/floom) [![Dependency Status](https://gemnasium.com/erulabs/floom.svg)](https://gemnasium.com/erulabs/floom) [![Stories in Ready](https://badge.waffle.io/erulabs/floom.png?label=ready&title=Ready)](https://waffle.io/erulabs/floom)
 
+Install CLI globally: `npm install -g floom`
+Install to project: `npm install floom`
+
+Write a `floomfile.js`:
+
 ```javascript
 var floom = require('floom'),
-  aws = require('floom-aws'),
   myServers = ['app-1', 'app-2'];
 
 // Define a task
@@ -32,6 +36,7 @@ floom.task('provision_rs', function () {
 
 // COMING SOON - none of this stuff exists yet:
 // An example of deploying an application to our newly built nodes!
+var aws = require('floom-aws');
 floom.task('deploy_app', function () {
   // Select the name servers
   floom.nodes(myServers)
